@@ -1,20 +1,71 @@
 ﻿#include <iostream>
-#include <cstdlib>   // srand, rand
-#include <ctime>     // time
-
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <queue>          
+#include <unordered_set>
 using namespace std;
 
+
+void printFrames(const vector<int>& frames) {
+	for (int f : frames) {
+		if (f == -1) cout << "- ";
+		else cout << f << ' ';
+	}
+	cout << '\n';
+}
+
+
+int simulateFIFO(const vector<int>& refs, int frameCount) {
+	vector<int> frames(frameCount, -1);
+	queue<int> q;
+	unordered_set<int> inFrame;
+
+
+	int faults = 0;
+	cout << "--- FIFO simulation ---\n";
+	for (int p : refs) {
+		cout << "Ref: " << p << " | ";
+		if (inFrame.find(p) == inFrame.end()) {
+			faults++;
+			if ((int)q.size() < frameCount) {
+				q.push(p);
+				inFrame.insert(p);
+				for (int i = 0; i < frameCount; ++i) if (frames[i] == -1) { frames[i] = p; break; }
+			}
+			else {
+				int old = q.front(); q.pop();
+				inFrame.erase(old);
+				for (int i = 0; i < frameCount; ++i) if (frames[i] == old) { frames[i] = p; break; }
+				q.push(p);
+				inFrame.insert(p);
+			}
+			cout << "MISS\n";
+		}
+		else {
+			cout << "HIT\n";
+		}
+		cout << "Frames: "; printFrames(frames);
+	}
+	cout << "Total page faults (FIFO): " << faults << "\n";
+	return faults;
+}
+
+
 int main() {
-    // Khởi tạo seed cho random theo thời gian thực
-    srand(time(0));
+	int frameCount;
+	cout << "Nhap so khung trang (frames): ";
+	cin >> frameCount;
 
-    cout << "10 so ngau nhien tu 1 den 100: " << endl;
 
-    for (int i = 0; i < 10; i++) {
-        int number = rand() % 100 + 1;  // giá trị từ 1 -> 100
-        cout << number << " ";
-    }
+	int n;
+	cout << "nhap so luong tham chieu trang: ";
+	cin >> n;
+	vector<int> refs(n);
+	cout << "nhap day cac trang: ";
+	for (int i = 0; i < n; ++i) cin >> refs[i];
 
-    cout << endl;
-    return 0;
+
+	simulateFIFO(refs, frameCount);
+	return 0;
 }
