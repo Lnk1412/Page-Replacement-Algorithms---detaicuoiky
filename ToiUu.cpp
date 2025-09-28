@@ -2,7 +2,6 @@
 #include <vector>
 using namespace std;
 
-// Hàm tìm trang để thay thế theo thuật toán Optimal
 int findReplaceIndex(const vector<int>& frames, const vector<int>& refs, int current) {
     int farthest = -1, idx = -1;
     for (int i = 0; i < frames.size(); i++) {
@@ -10,7 +9,7 @@ int findReplaceIndex(const vector<int>& frames, const vector<int>& refs, int cur
         for (j = current + 1; j < refs.size(); j++) {
             if (frames[i] == refs[j]) break;
         }
-        if (j == refs.size()) return i; // trang không còn dùng nữa
+        if (j == refs.size()) return i; 
         if (j > farthest) {
             farthest = j;
             idx = i;
@@ -37,7 +36,6 @@ int main() {
         int page = refs[i];
         bool found = false;
 
-        // Kiểm tra trang có trong khung chưa
         for (int x : frames) {
             if (x == page) {
                 found = true;
@@ -59,4 +57,5 @@ int main() {
 
     cout << "Tong so loi trang: " << pageFaults << endl;
     return 0;
+
 }
