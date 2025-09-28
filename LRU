@@ -1,43 +1,64 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <string>
 using namespace std;
 
 int main() {
-    int capacity = 3;  // số khung trang
-    vector<int> memory;   // lưu các trang trong bộ nhớ
+    int capacity;
+    cout << "Nhap so khung trang: ";
+    cin >> capacity;
 
-    vector<int> pages = {1, 2, 3, 4, 2, 1, 5}; // dãy tham chiếu ví dụ
+    string ref;
+    cout << "Nhap chuoi tham chieu: ";
+    cin >> ref;
 
-    int pageFaults = 0;
+    vector<int> frames;
+    int page_faults = 0;
 
-    for (int i = 0; i < pages.size(); i++) {
-        int page = pages[i];
+    cout << "\nQua trinh thay the trang (LRU):\n";
 
-        // Nếu trang đã có trong bộ nhớ
-        auto it = find(memory.begin(), memory.end(), page);
-        if (it != memory.end()) {
-            // đưa trang lên cuối (coi như mới dùng gần nhất)
-            memory.erase(it);
-            memory.push_back(page);
-        }
-        else {
-            // Nếu bộ nhớ đầy
-            if (memory.size() == capacity) {
-                cout << "Thay the trang: " << memory.front() << endl;
-                memory.erase(memory.begin()); // xóa trang LRU (ở đầu vector)
+    for (int i = 0; i < (int)ref.size(); i++) {
+        int page = ref[i] - '0';
+        bool hit = false;
+
+        for (int x : frames) {
+            if (x == page) {
+                hit = true;
+                break;
             }
-            // đưa trang mới vào cuối
-            memory.push_back(page);
-            pageFaults++;
         }
 
-        // In trạng thái bộ nhớ
-        cout << "Bo nho: ";
-        for (int x : memory) cout << x << " ";
-        cout << endl;
+        if (!hit) {
+            if ((int)frames.size() < capacity) {
+                frames.push_back(page);
+            } else {
+                int idx_to_replace = -1;
+                int least_recent = i;
+
+                for (int j = 0; j < (int)frames.size(); j++) {
+                    int last_use = -1;
+                    for (int k = i - 1; k >= 0; k--) {
+                        if (frames[j] == ref[k] - '0') {
+                            last_use = k;
+                            break;
+                        }
+                    }
+                    if (last_use < least_recent) {
+                        least_recent = last_use;
+                        idx_to_replace = j;
+                    }
+                }
+
+                frames[idx_to_replace] = page;
+            }
+            page_faults++;
+        }
+
+        cout << "Trang " << page << " -> [ ";
+        for (int x : frames) cout << x << " ";
+        cout << "]" << (hit ? " (hit)" : " (loi trang)") << "\n";
     }
 
-    cout << "Tong so page faults = " << pageFaults << endl;
+    cout << "\nTong so loi trang = " << page_faults << endl;
     return 0;
 }
