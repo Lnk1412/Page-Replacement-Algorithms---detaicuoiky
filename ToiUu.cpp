@@ -1,61 +1,72 @@
 ﻿#include <iostream>
 #include <vector>
+#include <string>
 using namespace std;
 
-int findReplaceIndex(const vector<int>& frames, const vector<int>& refs, int current) {
-    int farthest = -1, idx = -1;
-    for (int i = 0; i < frames.size(); i++) {
-        int j;
-        for (j = current + 1; j < refs.size(); j++) {
-            if (frames[i] == refs[j]) break;
-        }
-        if (j == refs.size()) return i; 
-        if (j > farthest) {
-            farthest = j;
-            idx = i;
-        }
-    }
-    return idx;
-}
-
 int main() {
-    int frameCount, n;
-    cout << "Nhap so khung: ";
-    cin >> frameCount;
-    cout << "Nhap do dai chuoi tham chieu: ";
-    cin >> n;
+    int capacity;
+    cout << "Nhap so khung trang: ";
+    cin >> capacity;
 
-    vector<int> refs(n);
+    string ref;
     cout << "Nhap chuoi tham chieu: ";
-    for (int i = 0; i < n; i++) cin >> refs[i];
+    cin >> ref;
 
     vector<int> frames;
-    int pageFaults = 0;
+    int page_faults = 0;
 
-    for (int i = 0; i < n; i++) {
-        int page = refs[i];
-        bool found = false;
+    cout << "\nQua trinh thay the trang (OPT):\n";
 
+    for (int i = 0; i < (int)ref.size(); i++) {
+        int page = ref[i] - '0';
+        bool hit = false;
+
+        // kiem tra hit
         for (int x : frames) {
             if (x == page) {
-                found = true;
+                hit = true;
                 break;
             }
         }
 
-        if (!found) {
-            pageFaults++;
-            if (frames.size() < frameCount) {
+        if (!hit) { // neu miss
+            if ((int)frames.size() < capacity) {
                 frames.push_back(page);
             }
             else {
-                int idx = findReplaceIndex(frames, refs, i);
-                frames[idx] = page;
+                // tim trang can thay theo OPT
+                int idx_to_replace = -1;
+                int farthest = -1;
+
+                for (int j = 0; j < (int)frames.size(); j++) {
+                    int next_use = -1;
+                    for (int k = i + 1; k < (int)ref.size(); k++) {
+                        if (frames[j] == ref[k] - '0') {
+                            next_use = k;
+                            break;
+                        }
+                    }
+                    if (next_use == -1) { // khong dung lai nua
+                        idx_to_replace = j;
+                        break;
+                    }
+                    else if (next_use > farthest) {
+                        farthest = next_use;
+                        idx_to_replace = j;
+                    }
+                }
+
+                frames[idx_to_replace] = page;
             }
+            page_faults++;
         }
+
+        // in trang thai
+        cout << "Trang " << page << " -> [ ";
+        for (int x : frames) cout << x << " ";
+        cout << "]" << (hit ? " (hit)" : " (loi trang)") << "\n";
     }
 
-    cout << "Tong so loi trang: " << pageFaults << endl;
+    cout << "\nTong so loi trang = " << page_faults << endl;
     return 0;
-
 }
