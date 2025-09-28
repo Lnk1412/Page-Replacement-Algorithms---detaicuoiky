@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int capacity = 3;  // số khung trang
+    vector<int> memory;   // lưu các trang trong bộ nhớ
+
+    vector<int> pages = {1, 2, 3, 4, 2, 1, 5}; // dãy tham chiếu ví dụ
+
+    int pageFaults = 0;
+
+    for (int i = 0; i < pages.size(); i++) {
+        int page = pages[i];
+
+        // Nếu trang đã có trong bộ nhớ
+        auto it = find(memory.begin(), memory.end(), page);
+        if (it != memory.end()) {
+            // đưa trang lên cuối (coi như mới dùng gần nhất)
+            memory.erase(it);
+            memory.push_back(page);
+        }
+        else {
+            // Nếu bộ nhớ đầy
+            if (memory.size() == capacity) {
+                cout << "Thay the trang: " << memory.front() << endl;
+                memory.erase(memory.begin()); // xóa trang LRU (ở đầu vector)
+            }
+            // đưa trang mới vào cuối
+            memory.push_back(page);
+            pageFaults++;
+        }
+
+        // In trạng thái bộ nhớ
+        cout << "Bo nho: ";
+        for (int x : memory) cout << x << " ";
+        cout << endl;
+    }
+
+    cout << "Tong so page faults = " << pageFaults << endl;
+    return 0;
+}
