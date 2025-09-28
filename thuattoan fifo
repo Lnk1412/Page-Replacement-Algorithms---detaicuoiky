@@ -1,71 +1,49 @@
 ﻿#include <iostream>
 #include <vector>
-#include <algorithm>
-#include <string>
-#include <queue>          
-#include <unordered_set>
 using namespace std;
 
-
-void printFrames(const vector<int>& frames) {
-	for (int f : frames) {
-		if (f == -1) cout << "- ";
-		else cout << f << ' ';
-	}
-	cout << '\n';
-}
-
-
-int simulateFIFO(const vector<int>& refs, int frameCount) {
-	vector<int> frames(frameCount, -1);
-	queue<int> q;
-	unordered_set<int> inFrame;
-
-
-	int faults = 0;
-	cout << "--- FIFO simulation ---\n";
-	for (int p : refs) {
-		cout << "Ref: " << p << " | ";
-		if (inFrame.find(p) == inFrame.end()) {
-			faults++;
-			if ((int)q.size() < frameCount) {
-				q.push(p);
-				inFrame.insert(p);
-				for (int i = 0; i < frameCount; ++i) if (frames[i] == -1) { frames[i] = p; break; }
-			}
-			else {
-				int old = q.front(); q.pop();
-				inFrame.erase(old);
-				for (int i = 0; i < frameCount; ++i) if (frames[i] == old) { frames[i] = p; break; }
-				q.push(p);
-				inFrame.insert(p);
-			}
-			cout << "MISS\n";
-		}
-		else {
-			cout << "HIT\n";
-		}
-		cout << "Frames: "; printFrames(frames);
-	}
-	cout << "Total page faults (FIFO): " << faults << "\n";
-	return faults;
-}
-
-
 int main() {
-	int frameCount;
-	cout << "Nhap so khung trang (frames): ";
-	cin >> frameCount;
+    int capacity;                  
+    cout << "Nhap so khung trang: ";
+    cin >> capacity;
 
+    string ref;                    
+    cout << "Nhap chuoi tham chieu: ";
+    cin >> ref;
 
-	int n;
-	cout << "nhap so luong tham chieu trang: ";
-	cin >> n;
-	vector<int> refs(n);
-	cout << "nhap day cac trang: ";
-	for (int i = 0; i < n; ++i) cin >> refs[i];
+    vector<int> frames;            
+    int page_faults = 0;           
+    int index_to_replace = 0;      
 
+    cout << "\nQua trinh thay the trang (FIFO):\n";
 
-	simulateFIFO(refs, frameCount);
-	return 0;
+    for (char c : ref) {
+        int page = c - '0';        
+        bool hit = false;
+
+        for (int x : frames) {
+            if (x == page) {
+                hit = true;
+                break;
+            }
+        }
+
+        if (!hit) { // neu chua co (page fault)
+            if ((int)frames.size() < capacity) {
+                frames.push_back(page); 
+            } else {
+                // thay the theo FIFO
+                frames[index_to_replace] = page;
+                index_to_replace = (index_to_replace + 1) % capacity;
+            }
+            page_faults++;
+        }
+
+        cout << "Trang " << page << " -> [ ";
+        for (int x : frames) cout << x << " ";
+        cout << "]" << (hit ? " (hit)" : " (loi trang)") << "\n";
+    }
+
+    cout << "\nTong so loi trang = " << page_faults << endl;
+    return 0;
 }
