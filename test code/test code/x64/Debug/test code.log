@@ -1,0 +1,14 @@
+﻿  Source.cpp
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(40,23): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(42,23): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(49,41): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(52,23): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(89,23): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(91,23): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(98,41): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(101,23): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(137,23): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(139,23): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(146,41): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\test code\Source.cpp(149,23): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  test code.vcxproj -> D:\CHUYÊN NGÀNH CNTT\HỆ ĐIỀU HÀNH\test code\x64\Debug\test code.exe
