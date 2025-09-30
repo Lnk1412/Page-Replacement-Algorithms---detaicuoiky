@@ -2,7 +2,6 @@
 #include <vector>
 #include <fstream>
 #include <iomanip>
-#include <limits>
 using namespace std;
 
 void printLine(int n) {
@@ -11,7 +10,7 @@ void printLine(int n) {
     cout << "\n";
 }
 
-void ThuatToanFIFO(int capacity, const vector<int>& ref) {
+void ThuatToanFIFO(int capacity, string ref) {
     vector<int> frames;
     int page_faults = 0;
     int index_to_replace = 0;
@@ -19,8 +18,9 @@ void ThuatToanFIFO(int capacity, const vector<int>& ref) {
     vector<char> mark(ref.size(), ' ');
 
     for (int i = 0; i < (int)ref.size(); i++) {
-        int page = ref[i];
+        int page = ref[i] - '0';
         bool hit = false;
+
         for (int x : frames) if (x == page) { hit = true; break; }
 
         if (!hit) {
@@ -38,7 +38,7 @@ void ThuatToanFIFO(int capacity, const vector<int>& ref) {
 
     cout << "\n=== Qua trinh thay the trang (FIFO) ===\n";
     printLine(ref.size());
-    cout << "|    "; for (int c : ref) cout << setw(4) << c << "|"; cout << "\n";
+    cout << "|    "; for (char c : ref) cout << setw(4) << c << "|"; cout << "\n";
     printLine(ref.size());
     for (int r = 0; r < capacity; r++) {
         cout << "|F" << r << "  ";
@@ -53,15 +53,16 @@ void ThuatToanFIFO(int capacity, const vector<int>& ref) {
     cout << "Tong so loi trang = " << page_faults << "\n";
 }
 
-void ThuatToanOPT(int capacity, const vector<int>& ref) {
+void ThuatToanOPT(int capacity, string ref) {
     vector<int> frames;
     int page_faults = 0;
     vector<vector<int>> table(capacity, vector<int>(ref.size(), -1));
     vector<char> mark(ref.size(), ' ');
 
     for (int i = 0; i < (int)ref.size(); i++) {
-        int page = ref[i];
+        int page = ref[i] - '0';
         bool hit = false;
+
         for (int x : frames) if (x == page) { hit = true; break; }
 
         if (!hit) {
@@ -71,7 +72,7 @@ void ThuatToanOPT(int capacity, const vector<int>& ref) {
                 for (int j = 0; j < (int)frames.size(); j++) {
                     int next_use = -1;
                     for (int k = i + 1; k < (int)ref.size(); k++)
-                        if (frames[j] == ref[k]) { next_use = k; break; }
+                        if (frames[j] == ref[k] - '0') { next_use = k; break; }
                     if (next_use == -1) { idx_to_replace = j; break; }
                     else if (next_use > farthest) { farthest = next_use; idx_to_replace = j; }
                 }
@@ -86,7 +87,7 @@ void ThuatToanOPT(int capacity, const vector<int>& ref) {
 
     cout << "\n=== Qua trinh thay the trang (OPT) ===\n";
     printLine(ref.size());
-    cout << "|    "; for (int c : ref) cout << setw(4) << c << "|"; cout << "\n";
+    cout << "|    "; for (char c : ref) cout << setw(4) << c << "|"; cout << "\n";
     printLine(ref.size());
     for (int r = 0; r < capacity; r++) {
         cout << "|F" << r << "  ";
@@ -101,15 +102,16 @@ void ThuatToanOPT(int capacity, const vector<int>& ref) {
     cout << "Tong so loi trang = " << page_faults << "\n";
 }
 
-void ThuatToanLRU(int capacity, const vector<int>& ref) {
+void ThuatToanLRU(int capacity, string ref) {
     vector<int> frames;
     int page_faults = 0;
     vector<vector<int>> table(capacity, vector<int>(ref.size(), -1));
     vector<char> mark(ref.size(), ' ');
 
     for (int i = 0; i < (int)ref.size(); i++) {
-        int page = ref[i];
+        int page = ref[i] - '0';
         bool hit = false;
+
         for (int x : frames) if (x == page) { hit = true; break; }
 
         if (!hit) {
@@ -119,7 +121,7 @@ void ThuatToanLRU(int capacity, const vector<int>& ref) {
                 for (int j = 0; j < (int)frames.size(); j++) {
                     int last_use = -1;
                     for (int k = i - 1; k >= 0; k--)
-                        if (frames[j] == ref[k]) { last_use = k; break; }
+                        if (frames[j] == ref[k] - '0') { last_use = k; break; }
                     if (last_use < least_recent) { least_recent = last_use; idx_to_replace = j; }
                 }
                 frames[idx_to_replace] = page;
@@ -133,7 +135,7 @@ void ThuatToanLRU(int capacity, const vector<int>& ref) {
 
     cout << "\n=== Qua trinh thay the trang (LRU) ===\n";
     printLine(ref.size());
-    cout << "|    "; for (int c : ref) cout << setw(4) << c << "|"; cout << "\n";
+    cout << "|    "; for (char c : ref) cout << setw(4) << c << "|"; cout << "\n";
     printLine(ref.size());
     for (int r = 0; r < capacity; r++) {
         cout << "|F" << r << "  ";
@@ -156,21 +158,14 @@ int main() {
     }
 
     int capacity;
-    vector<int> ref;
-    string line;
-
+    string ref;
     fin >> capacity;
-    fin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-    getline(fin, line); 
+    fin >> ref;
     fin.close();
-
-    int num;
-    stringstream ss(line);
-    while (ss >> num) ref.push_back(num);
 
     cout << left << setw(20) << "So khung trang" << ": " << capacity << "\n";
     cout << left << setw(20) << "Chuoi tham chieu" << ": ";
-    for (int c : ref) cout << c << " ";
+    for (char c : ref) cout << c << " ";
     cout << "\n\n";
 
     ThuatToanFIFO(capacity, ref);
