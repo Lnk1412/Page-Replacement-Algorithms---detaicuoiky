@@ -10,12 +10,12 @@ void printLine(int n) {
     cout << "\n";
 }
 
-//FIFO
 void ThuatToanFIFO(int capacity, string ref) {
     vector<int> frames;
     int page_faults = 0;
     int index_to_replace = 0;
     vector<vector<int>> table(capacity, vector<int>(ref.size(), -1));
+    vector<char> mark(ref.size(), ' ');
 
     for (int i = 0; i < (int)ref.size(); i++) {
         int page = ref[i] - '0';
@@ -30,6 +30,7 @@ void ThuatToanFIFO(int capacity, string ref) {
                 index_to_replace = (index_to_replace + 1) % capacity;
             }
             page_faults++;
+            mark[i] = '*';
         }
         for (int r = 0; r < capacity; r++)
             if (r < (int)frames.size()) table[r][i] = frames[r];
@@ -47,14 +48,16 @@ void ThuatToanFIFO(int capacity, string ref) {
         }
         cout << "\n"; printLine(ref.size());
     }
+    cout << "|    "; for (char m : mark) cout << setw(4) << m << "|"; cout << "\n";
+    printLine(ref.size());
     cout << "Tong so loi trang = " << page_faults << "\n";
 }
 
-//TOI UU
 void ThuatToanOPT(int capacity, string ref) {
     vector<int> frames;
     int page_faults = 0;
     vector<vector<int>> table(capacity, vector<int>(ref.size(), -1));
+    vector<char> mark(ref.size(), ' ');
 
     for (int i = 0; i < (int)ref.size(); i++) {
         int page = ref[i] - '0';
@@ -76,6 +79,7 @@ void ThuatToanOPT(int capacity, string ref) {
                 frames[idx_to_replace] = page;
             }
             page_faults++;
+            mark[i] = '*';
         }
         for (int r = 0; r < capacity; r++)
             if (r < (int)frames.size()) table[r][i] = frames[r];
@@ -93,14 +97,16 @@ void ThuatToanOPT(int capacity, string ref) {
         }
         cout << "\n"; printLine(ref.size());
     }
+    cout << "|    "; for (char m : mark) cout << setw(4) << m << "|"; cout << "\n";
+    printLine(ref.size());
     cout << "Tong so loi trang = " << page_faults << "\n";
 }
 
-//LRU
 void ThuatToanLRU(int capacity, string ref) {
     vector<int> frames;
     int page_faults = 0;
     vector<vector<int>> table(capacity, vector<int>(ref.size(), -1));
+    vector<char> mark(ref.size(), ' ');
 
     for (int i = 0; i < (int)ref.size(); i++) {
         int page = ref[i] - '0';
@@ -121,6 +127,7 @@ void ThuatToanLRU(int capacity, string ref) {
                 frames[idx_to_replace] = page;
             }
             page_faults++;
+            mark[i] = '*';
         }
         for (int r = 0; r < capacity; r++)
             if (r < (int)frames.size()) table[r][i] = frames[r];
@@ -138,10 +145,11 @@ void ThuatToanLRU(int capacity, string ref) {
         }
         cout << "\n"; printLine(ref.size());
     }
+    cout << "|    "; for (char m : mark) cout << setw(4) << m << "|"; cout << "\n";
+    printLine(ref.size());
     cout << "Tong so loi trang = " << page_faults << "\n";
 }
 
-// MAIN
 int main() {
     ifstream fin("input.txt");
     if (!fin.is_open()) {
@@ -149,29 +157,20 @@ int main() {
         return 1;
     }
 
-    int capacity, choice;
+    int capacity;
     string ref;
-
     fin >> capacity;
     fin >> ref;
-    fin >> choice;
     fin.close();
 
     cout << left << setw(20) << "So khung trang" << ": " << capacity << "\n";
     cout << left << setw(20) << "Chuoi tham chieu" << ": ";
     for (char c : ref) cout << c << " ";
-    cout << "\n";
-    cout << left << setw(20) << "Lua chon thuat toan" << ": ";
-    if (choice == 1) cout << "FIFO";
-    else if (choice == 2) cout << "OPT";
-    else if (choice == 3) cout << "LRU";
-    else cout << "Khong hop le";
     cout << "\n\n";
 
-    if (choice == 1) ThuatToanFIFO(capacity, ref);
-    else if (choice == 2) ThuatToanOPT(capacity, ref);
-    else if (choice == 3) ThuatToanLRU(capacity, ref);
-    else cout << "Lua chon khong hop le!\n";
+    ThuatToanFIFO(capacity, ref);
+    ThuatToanOPT(capacity, ref);
+    ThuatToanLRU(capacity, ref);
 
     return 0;
 }
